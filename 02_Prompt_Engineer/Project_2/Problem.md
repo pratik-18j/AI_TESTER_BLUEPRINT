@@ -1,0 +1,1 @@
+We have to generate selenium automation framework from scratch wehre you need to add two page object model, proper  production ready

@@ -211,3 +211,120 @@ This document covers test cases for the documented Restful Booker API endpoints,
 - When creating and modifying bookings, preserve id references and validate that the API reflects changes correctly.
 - If the API returns a different status code than the expected documented code, record the actual status and response details as part of the test result.
 - For error and edge cases, always assert both HTTP status and the error payload or message.
+
+## JIRA Test Cases
+
+### AUTH-001: Create auth token with valid credentials
+- Summary: Verify that `POST /auth` returns a valid token for correct credentials.
+- Preconditions: API is reachable and valid credentials exist.
+- Steps to Reproduce:
+  1. Send `POST https://restful-booker.herokuapp.com/auth`.
+  2. Set header `Content-Type: application/json`.
+  3. Use body:
+     ```json
+     {"username": "admin", "password": "password123"}
+     ```
+  4. Inspect the HTTP response status and JSON body.
+- Expected Result: `200 OK`, response JSON contains non-empty `token` value.
+- Actual Result: Not executed yet.
+
+### AUTH-002: Reject auth with invalid credentials
+- Summary: Verify that `POST /auth` rejects login attempts with wrong password.
+- Preconditions: API is reachable.
+- Steps to Reproduce:
+  1. Send `POST https://restful-booker.herokuapp.com/auth`.
+  2. Set header `Content-Type: application/json`.
+  3. Use body:
+     ```json
+     {"username": "admin", "password": "wrongpassword"}
+     ```
+  4. Inspect the HTTP response status and JSON body.
+- Expected Result: `401 Unauthorized` or `403 Forbidden`; no token returned; error message indicates invalid credentials.
+- Actual Result: Not executed yet.
+
+### BOOKING-001: Retrieve booking details by valid ID
+- Summary: Verify that `GET /booking/{id}` returns booking data for a valid booking ID.
+- Preconditions: API is reachable, booking ID `1` exists.
+- Steps to Reproduce:
+  1. Send `GET https://restful-booker.herokuapp.com/booking/1`.
+  2. Set header `Accept: application/json`.
+  3. Inspect the HTTP response status and response payload.
+- Expected Result: `200 OK`; response contains `firstname`, `lastname`, `totalprice`, `depositpaid`, `bookingdates`, and `additionalneeds`.
+- Actual Result: Not executed yet.
+
+### BOOKING-002: Return 404 for non-existing booking ID
+- Summary: Verify that `GET /booking/{id}` returns a not found error for missing booking ID.
+- Preconditions: API is reachable.
+- Steps to Reproduce:
+  1. Send `GET https://restful-booker.herokuapp.com/booking/999999`.
+  2. Set header `Accept: application/json`.
+  3. Inspect the HTTP response status and response payload.
+- Expected Result: `404 Not Found` or equivalent error; no booking data returned.
+- Actual Result: Not executed yet.
+
+### BOOKING-003: Create booking with valid JSON payload
+- Summary: Verify that `POST /booking` creates a booking and returns matching booking data.
+- Preconditions: API is reachable.
+- Steps to Reproduce:
+  1. Send `POST https://restful-booker.herokuapp.com/booking`.
+  2. Set header `Content-Type: application/json`.
+  3. Use body:
+     ```json
+     {
+       "firstname": "John",
+       "lastname": "Doe",
+       "totalprice": 150,
+       "depositpaid": true,
+       "bookingdates": {
+         "checkin": "2025-10-01",
+         "checkout": "2025-10-10"
+       },
+       "additionalneeds": "Breakfast"
+     }
+     ```
+  4. Inspect the HTTP response status and JSON body.
+- Expected Result: `200 OK`; response contains `bookingid`; returned booking object matches the request payload.
+- Actual Result: Not executed yet.
+
+### BOOKING-004: Reject booking creation with invalid date format
+- Summary: Verify that `POST /booking` returns validation error for malformed dates.
+- Preconditions: API is reachable.
+- Steps to Reproduce:
+  1. Send `POST https://restful-booker.herokuapp.com/booking`.
+  2. Set header `Content-Type: application/json`.
+  3. Use body:
+     ```json
+     {
+       "firstname": "Jane",
+       "lastname": "Smith",
+       "totalprice": 100,
+       "depositpaid": false,
+       "bookingdates": {
+         "checkin": "01-10-2025",
+         "checkout": "10/15/2025"
+       },
+       "additionalneeds": "None"
+     }
+     ```
+  4. Inspect the HTTP response status and JSON body.
+- Expected Result: `400 Bad Request` or validation error; error message indicates invalid booking date format.
+- Actual Result: Not executed yet.
+
+### DELETE-001: Verify delete requires auth token
+- Summary: Verify that `DELETE /booking/{id}` denies deletion without authentication.
+- Preconditions: API is reachable, booking ID exists.
+- Steps to Reproduce:
+  1. Send `DELETE https://restful-booker.herokuapp.com/booking/1`.
+  2. Do not include any auth header or cookie.
+  3. Inspect the HTTP response status and response payload.
+- Expected Result: `401 Unauthorized` or `403 Forbidden`; booking is not deleted.
+- Actual Result: Not executed yet.
+
+### PING-001: Health check with `GET /ping`
+- Summary: Verify that `GET /ping` returns service health status.
+- Preconditions: API is reachable.
+- Steps to Reproduce:
+  1. Send `GET https://restful-booker.herokuapp.com/ping`.
+  2. Inspect the HTTP response status and response body.
+- Expected Result: `201 Created` or `200 OK`; response body contains `OK`.
+- Actual Result: Not executed yet.

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Salesforce Login Automation Suite" verbose="2" thread-count="1" parallel="false">
+    <test name="Valid Login Tests">
+        <classes>
+            <class name="com.salesforce.tests.LoginValidTestCase"/>
+        </classes>
+    </test>
+
+    <test name="Invalid Login Tests">
+        <classes>
+            <class name="com.salesforce.tests.LoginInvalidTestCase"/>
+        </classes>
+    </test>
+</suite>
