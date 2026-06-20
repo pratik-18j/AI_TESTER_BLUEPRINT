@@ -1,0 +1,41 @@
+{
+  "name": "jira-test-plan-generator",
+  "version": "1.0.0",
+  "description": "Generate professional test plans from Jira issues using GROQ AI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "concurrently \"react-scripts start\" \"node server.js\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "validate": "python 03_BLAST_FW/tools/01_credential_validator.py",
+    "test-jira": "python 03_BLAST_FW/tools/02b_jira_connection_test.py",
+    "test-groq": "python 03_BLAST_FW/tools/03_groq_api_tester.py"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^8.0.7",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "react-scripts": "5.0.1",
+    "concurrently": "^8.2.1"
+  },
+  "proxy": "http://localhost:5000",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
