@@ -1,0 +1,496 @@
+{
+  "name": "Task - 7th June",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Based on PRD, create\nTest Plan\nfrom the Test Plan  create\nTest Cases.csv\nfrom the Test Cases csv create\nPlaywright Test case.md file ",
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1232,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "82dd3928-34c9-4ef7-bf47-4d1406ceffec",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "\"You are a Senior QA Lead. Analyze the incoming PRD text provided in the user message and generate a comprehensive, structured text-based Test Plan covering functional, non-functional, and edge-case scenarios. Output ONLY the test plan content.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -624,
+        16
+      ],
+      "id": "65ab2c53-c214-45fb-b8e2-6948358601f1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "You are a Senior SDET. Read the incoming Test Plan text from the user message. Your objective is to write a comprehensive, industry-standard test suite based on this plan.\n\nGenerate exactly 10 core test cases covering primary features, critical end-to-end flows, positive/negative scenarios, and boundary conditions. \n\nYou must output a strictly formatted CSV using a comma (,) as the column separator. \n\nThe first line of your output must be this exact header row:\nIssueId,IssueKey,Test Type,Summary,Description,Action,Expected Result,Label,Assignee\n\nFollow these strict formatting rules (keep text highly concise to prevent token overflow):\n1. IssueId: Sequential numbers starting from 1 (e.g., 1, 2, 3...)\n2. IssueKey: Format \"PROJ-TC-001\", incrementing with each row.\n3. Test Type: One of: Functional, Integration, Regression, Smoke, UAT, Performance, Negative, Boundary, or UI/UX.\n4. Summary: Concise action title.\n5. Description: Short feature module name and goal.\n6. Action: Semicolon-separated brief steps (e.g., \"1. Go to URL; 2. Click login\").\n7. Expected Result: Clear verification point.\n8. Label: Tracking tags (e.g., \"High-Priority\").\n9. Assignee: Use \"QA-Engineer-1\".\n\nCRITICAL CONSTRAINTS:\n- Wrap every single text column field in double quotes.\n- Keep descriptions and actions short and punchy so the total output stays within token generation limits.\n- Output ONLY the raw CSV text. Do not include markdown blocks like ```csv, do not include intro text, and do not write explanations. Start directly with the header row."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -208,
+        16
+      ],
+      "id": "43607835-4885-49a5-be09-0899c7aeaa4c",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1SHwHOBJyZKXRvQceb3SszuyXJbWPShk7",
+          "mode": "list",
+          "cachedResultName": "Product Requirements Document (PRD) VWO.com.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1SHwHOBJyZKXRvQceb3SszuyXJbWPShk7/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -896,
+        16
+      ],
+      "id": "d8fb3345-0909-464a-a610-227f83e36fc2",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "8BnGMi7t0MMSzgEo",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -752,
+        16
+      ],
+      "id": "aec26cd7-bcb0-4c7f-8c95-cc22fcd3647d",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        16
+      ],
+      "id": "5b44c6b8-8a96-4672-9ec2-da9bfd6fcbaf",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        224
+      ],
+      "id": "c69c8f2e-daf7-45c8-8351-89977bb44247",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "jaBkh2P4E3dW6t2K",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        192
+      ],
+      "id": "67037aff-139a-4065-b6b0-c72f3e618ea9",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "jaBkh2P4E3dW6t2K",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "Test_Plan_VWO.md"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -288,
+        384
+      ],
+      "id": "3f3b1ab3-5e0a-4abe-a82d-c2a1be8899fd",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "name": "Test_Plan_VWO.txt",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1PXc1kt7tDjtcYBmsPCKBzdOBX8PW9VtG",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1PXc1kt7tDjtcYBmsPCKBzdOBX8PW9VtG"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        384
+      ],
+      "id": "4480d4a3-4b7a-47cc-b6c2-618dd45ef3e7",
+      "name": "TestPlan",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "8BnGMi7t0MMSzgEo",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "Test_Cases_VWO.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        -176
+      ],
+      "id": "abf44085-2605-44a7-a26f-2db9c6063456",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "name": "Test_Cases_VWO.csv",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1PXc1kt7tDjtcYBmsPCKBzdOBX8PW9VtG",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1PXc1kt7tDjtcYBmsPCKBzdOBX8PW9VtG"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        400,
+        -176
+      ],
+      "id": "5859ad3d-5000-475c-b862-9d67f4fa7c38",
+      "name": "Upload csv file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "8BnGMi7t0MMSzgEo",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "playwright_test_cases.md",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1PXc1kt7tDjtcYBmsPCKBzdOBX8PW9VtG",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1PXc1kt7tDjtcYBmsPCKBzdOBX8PW9VtG"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        688,
+        128
+      ],
+      "id": "3efe8a9c-ce29-40ed-be0b-81d9c84ea17a",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "8BnGMi7t0MMSzgEo",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "playwright_test_cases.md"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        128
+      ],
+      "id": "8e9c3734-71ff-4ac0-80b2-c315cecdcd92",
+      "name": "Convert to File2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        160,
+        128
+      ],
+      "id": "75945169-3993-4061-a9ca-a7e54835e78b",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        160,
+        320
+      ],
+      "id": "39a4df1c-ad21-43bf-ba68-0e05b43ea052",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "jaBkh2P4E3dW6t2K",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "TestPlan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TestPlan": {
+      "main": [
+        []
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "Upload csv file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload csv file": {
+      "main": [
+        []
+      ]
+    },
+    "Convert to File2": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Convert to File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "62b297fb-4f33-4bbf-8554-f0f1ab6d648e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "99b104983919d0baee172ff9f9bfc7e2f7dcdedc31f02d36c47a8b68110c91e7"
+  },
+  "nodeGroups": [],
+  "id": "3EjOpAcqFiS4ffB4",
+  "tags": []
+}

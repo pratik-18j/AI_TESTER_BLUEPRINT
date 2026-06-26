@@ -1,0 +1,95 @@
+{
+  "name": "AI_3X_01_QA_Buddy",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Ar. Ankita. How can I assist you today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -240,
+        -96
+      ],
+      "id": "16ae02d9-9b74-40fd-a6bf-33037b5d65b6",
+      "name": "When chat message received",
+      "webhookId": "c2df6598-c003-4f27-b260-147af13ebbca"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Architect assistant and you will only answer the queries related to the Architecture.\nThe tone should be technical and professional. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -32,
+        -96
+      ],
+      "id": "ea443f8e-d733-4580-8ec5-d45235ac2036",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-32b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        112
+      ],
+      "id": "42494fdc-55a5-49c4-923a-651f88dafd0a",
+      "name": "Qwen",
+      "credentials": {
+        "groqApi": {
+          "id": "jaBkh2P4E3dW6t2K",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qwen": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "5c825b75-8580-43ab-a6b1-3e99879e8fb9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "99b104983919d0baee172ff9f9bfc7e2f7dcdedc31f02d36c47a8b68110c91e7"
+  },
+  "nodeGroups": [],
+  "id": "0RUZF9LagcsJraNI",
+  "tags": []
+}

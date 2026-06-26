@@ -1,0 +1,158 @@
+{
+  "name": "AI_3X_01_JIRA_Agents",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e2456064-e6ba-4c8d-bc3f-69e4983309a4",
+      "name": "When chat message received",
+      "webhookId": "6519859c-4e87-4907-aa3e-7a998e928c3b"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Your are a  QA Automation engineer  with 15+ years of experience. You will get a details of JIRA ticket through the chat. Your task is to create the JIRA ticket with proper steps to repro and proper instructions like JIRA. Use the JIRA tool attached."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "411dc079-6a59-4c4e-85a5-656ad31640d4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-32b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "77c200a8-4e10-41e3-aca7-2e438013ba0c",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "jaBkh2P4E3dW6t2K",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "10000",
+          "mode": "list",
+          "cachedResultName": "VWO app"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "10007",
+          "mode": "list",
+          "cachedResultName": "Bug"
+        },
+        "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        464,
+        160
+      ],
+      "id": "e85f6d17-de6e-4f2b-b4eb-4b7383451461",
+      "name": "Create a JIRA ticket in VWO project",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "4nhtCppTB0US7yg4",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        208
+      ],
+      "id": "4c4f6b62-37ee-4bb3-8f4a-7ae5e1332644",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a JIRA ticket in VWO project": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "efab0af8-9ddf-4988-89da-d247f62c6037",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "99b104983919d0baee172ff9f9bfc7e2f7dcdedc31f02d36c47a8b68110c91e7"
+  },
+  "nodeGroups": [],
+  "id": "fFdFx8uoAAodt1Iu",
+  "tags": []
+}
